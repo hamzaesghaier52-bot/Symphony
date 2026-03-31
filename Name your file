@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>سيمفونية حياتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --bg:#04040A;
+  --gold:#C9A84C;
+  --gold2:#E8C97A;
+  --text:#F0EDE6;
+  --muted:#6A6A8A;
+  --mood-color:#4FC3F7;
+  --mood-glow:rgba(79,195,247,0.3);
+}
+
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Tajawal',sans-serif;
+  touch-action:pan-y;
+}
+
+/* BG */
+.bg{
+  position:fixed;inset:0;z-index:0;
+  overflow:hidden;
+}
+
+.orb{
+  position:absolute;border-radius:50%;
+  filter:blur(100px);
+  transition:all 3s ease;
+}
+.orb1{width:400px;height:400px;top:-100px;right:-100px;opacity:0.12;background:var(--mood-color);}
+.orb2{width:300px;height:300px;bottom:-80px;left:-80px;opacity:0.08;background:var(--mood-color);}
+.orb3{width:200px;height:200px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.05;background:var(--mood-color);}
+
+/* Particles */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.particle{
+  position:absolute;
+  width:2px;height:2px;
+  border-radius:50%;
+  background:var(--mood-color);
+  opacity:0;
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);opacity:0;}
+  10%{opacity:0.6;}
+  90%{opacity:0.2;}
+  100%{transform:translateY(-20px) scale(1);opacity:0;}
+}
+
+/* Grid */
+.bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,0.02) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+/* App */
+.app{
+  position:relative;z-index:1;
+  height:100vh;
+  display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top,20px) 0 env(safe-area-inset-bottom,20px);
+}
+
+/* Header */
+.header{
+  padding:20px 24px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  animation:fadeDown 1s ease both;
+}
+
+.logo-wrap{display:flex;flex-direction:column;}
+.logo-ar{
+  font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.logo-en{font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+
+.live-badge{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--muted);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:6px 12px;border-radius:20px;
+  background:rgba(255,255,255,0.02);
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#4CAF50;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* Main center */
+.center{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:0 24px;
+  gap:0;
+}
+
+/* Heart */
+.heart-container{
+  position:relative;
+  width:180px;height:180px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:8px;
+  animation:fadeUp 1s 0.3s ease both;
+}
+
+.ring{
+  position:absolute;border-radius:50%;border:1px solid;
+  border-color:var(--mood-color);
+  opacity:0.2;
+  animation:ripple 3s ease-in-out infinite;
+}
+.ring1{width:180px;height:180px;}
+.ring2{width:150px;height:150px;animation-delay:-1s;opacity:0.15;}
+.ring3{width:120px;height:120px;animation-delay:-2s;opacity:0.1;}
+
+@keyframes ripple{
+  0%,100%{transform:scale(1);opacity:0.2;}
+  50%{transform:scale(1.05);opacity:0.1;}
+}
+
+.heart-glow{
+  position:absolute;
+  width:100px;height:100px;
+  border-radius:50%;
+  background:var(--mood-color);
+  filter:blur(30px);
+  opacity:0.2;
+  transition:all 1.5s ease;
+  animation:glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{transform:scale(1);opacity:0.2;}
+  50%{transform:scale(1.3);opacity:0.35;}
+}
+
+.heart-svg{
+  position:relative;z-index:2;
+  transition:all 0.5s ease;
+  animation:heartbeat 1s ease-in-out infinite;
+  filter:drop-shadow(0 0 15px var(--mood-color));
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  15%{transform:scale(1.12);}
+  30%{transform:scale(1);}
+  45%{transform:scale(1.06);}
+}
+
+.bpm-badge{
+  position:absolute;z-index:3;
+  display:flex;flex-direction:column;align-items:center;
+  bottom:30px;
+}
+.bpm-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:300;
+  color:#fff;
+  text-shadow:0 0 20px var(--mood-color);
+  line-height:1;
+  transition:all 0.5s;
+}
+.bpm-label{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.5);text-transform:uppercase;}
+
+/* Mood info */
+.mood-info{
+  text-align:center;
+  animation:fadeUp 1s 0.5s ease both;
+  margin-bottom:16px;
+}
+.mood-name-ar{
+  font-size:32px;font-weight:700;
+  color:var(--mood-color);
+  text-shadow:0 0 30px var(--mood-glow);
+  transition:all 0.8s ease;
+  line-height:1.2;
+}
+.mood-name-en{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;letter-spacing:4px;
+  color:var(--muted);text-transform:uppercase;
+  margin-top:2px;
+}
+.created-text{
+  font-size:12px;color:var(--gold);
+  margin-top:8px;opacity:0.7;
+  letter-spacing:1px;
+}
+
+/* Equalizer */
+.eq{
+  display:flex;align-items:flex-end;gap:3px;
+  height:32px;margin-bottom:20px;
+  animation:fadeUp 1s 0.6s ease both;
+}
+.eq-bar{
+  width:3px;border-radius:2px;
+  background:var(--mood-color);
+  opacity:0.5;
+  transition:background 1s;
+  animation:eq linear infinite;
+}
+@keyframes eq{
+  0%,100%{height:4px;}
+  50%{height:var(--h,16px);}
+}
+
+/* Now playing */
+.now-playing{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:14px 18px;
+  width:100%;
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;
+  animation:fadeUp 1s 0.7s ease both;
+}
+.np-icon{font-size:24px;}
+.np-text{flex:1;}
+.np-track{font-size:13px;font-weight:600;color:var(--text);}
+.np-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.np-eq{display:flex;gap:2px;align-items:flex-end;height:16px;}
+.np-bar{
+  width:2px;border-radius:1px;
+  background:var(--mood-color);
+  animation:eq linear infinite;
+  opacity:0.7;
+}
+
+/* Controls */
+.controls{
+  display:flex;align-items:center;gap:24px;
+  margin-bottom:20px;
+  animation:fadeUp 1s 0.8s ease both;
+}
+
+.ctrl{
+  background:none;border:none;
+  color:var(--muted);font-size:18px;
+  cursor:pointer;transition:all 0.2s;
+  padding:8px;
+}
+.ctrl:hover{color:var(--text);transform:scale(1.1);}
+
+.play-btn{
+  width:60px;height:60px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#8B6914);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#000;
+  box-shadow:0 0 30px rgba(201,168,76,0.4);
+  transition:all 0.3s;
+}
+.play-btn:hover{transform:scale(1.08);box-shadow:0 0 40px rgba(201,168,76,0.6);}
+.play-btn:active{transform:scale(0.95);}
+
+/* Slider */
+.slider-wrap{
+  width:100%;
+  animation:fadeUp 1s 0.9s ease both;
+  margin-bottom:16px;
+}
+.slider-labels{
+  display:flex;justify-content:space-between;
+  font-size:10px;color:var(--muted);
+  letter-spacing:1px;margin-bottom:6px;
+}
+input[type=range]{
+  width:100%;height:3px;
+  -webkit-appearance:none;
+  background:rgba(255,255,255,0.08);
+  border-radius:3px;outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  box-shadow:0 0 10px rgba(201,168,76,0.5);
+  cursor:pointer;
+}
+
+/* Mood selector */
+.moods{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  padding:0 24px 16px;
+  animation:fadeUp 1s 1s ease both;
+}
+
+.mood-btn{
+  display:flex;flex-direction:column;
+  align-items:center;gap:4px;
+  padding:10px 4px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.02);
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.mood-btn.active{
+  border-color:var(--mood-color);
+  background:rgba(255,255,255,0.06);
+  box-shadow:0 0 15px var(--mood-glow);
+}
+.mood-btn .icon{font-size:18px;}
+.mood-btn .label{font-size:9px;color:var(--muted);text-align:center;}
+.mood-btn.active .label{color:var(--mood-color);}
+
+/* Animations */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="particles" id="particles"></div>
+
+<div class="app">
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-ar">سيمفونية حياتك</div>
+      <div class="logo-en">Symphony of Your Life</div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>يستمع الآن</span>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="heart-container">
+      <div class="ring ring1"></div>
+      <div class="ring ring2"></div>
+      <div class="ring ring3"></div>
+      <div class="heart-glow"></div>
+      <svg class="heart-svg" id="heartSvg" width="80" height="75" viewBox="0 0 100 90">
+        <path id="heartPath" d="M50 85 C50 85 5 55 5 30 C5 15 17 5 30 5 C38 5 45 9 50 15 C55 9 62 5 70 5 C83 5 95 15 95 30 C95 55 50 85 50 85Z" fill="currentColor"/>
+      </svg>
+      <div class="bpm-badge">
+        <div class="bpm-num" id="bpmNum">72</div>
+        <div class="bpm-label">BPM</div>
+      </div>
+    </div>
+
+    <div class="mood-info">
+      <div class="mood-name-ar" id="moodAr">هادئ</div>
+      <div class="mood-name-en" id="moodEn">Calm</div>
+      <div class="created-text">✨ هذا اللحن خُلق لك الآن</div>
+    </div>
+
+    <div class="eq" id="eq"></div>
+
+    <div class="now-playing">
+      <div class="np-icon" id="npIcon">🎹</div>
+      <div class="np-text">
+        <div class="np-track" id="npTrack">Relaxing Piano</div>
+        <div class="np-sub" id="npSub">موسيقى هادئة • تشغيل تلقائي</div>
+      </div>
+      <div class="np-eq">
+        <div class="np-bar" style="--h:8px;animation-duration:0.8s"></div>
+        <div class="np-bar" style="--h:14px;animation-duration:1.1s;animation-delay:0.2s"></div>
+        <div class="np-bar" style="--h:10px;animation-duration:0.9s;animation-delay:0.4s"></div>
+        <div class="np-bar" style="--h:16px;animation-duration:1.3s;animation-delay:0.1s"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl" onclick="prevMood()">⏮</button>
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <button class="ctrl" onclick="nextMood()">⏭</button>
+    </div>
+
+    <div class="slider-wrap" style="padding:0">
+      <div class="slider-labels">
+        <span>هادئ ٥٠</span>
+        <span id="bpmSliderLabel">٧٢ نبضة</span>
+        <span>١٤٠ متوتر</span>
+      </div>
+      <input type="range" id="bpmSlider" min="50" max="140" value="72" oninput="onBPM(this.value)">
+    </div>
+  </div>
+
+  <div class="moods" id="moodsGrid"></div>
+</div>
+
+<script>
+const moods = [
+  {id:'calm',   ar:'هادئ',   en:'Calm',     icon:'🌊', color:'#4FC3F7', glow:'rgba(79,195,247,0.3)',   bpm:[50,75],  np:'Relaxing Piano',    sub:'بيانو هادئ',        npIcon:'🎹', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},
+  {id:'sad',    ar:'حزين',   en:'Sad',      icon:'💜', color:'#9C6FD6', glow:'rgba(156,111,214,0.3)',  bpm:[58,72],  np:'Sad Piano',         sub:'وتريات حزينة',      npIcon:'🎻', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},
+  {id:'stress', ar:'متوتر',  en:'Stressed', icon:'⚡', color:'#FF6B6B', glow:'rgba(255,107,107,0.3)',  bpm:[100,140],np:'Tension',            sub:'موسيقى توتر',       npIcon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'},
+  {id:'happy',  ar:'سعيد',   en:'Happy',    icon:'☀️', color:'#FFD700', glow:'rgba(255,215,0,0.3)',    bpm:[80,100], np:'Inspiring Cinematic',sub:'ملحمية مبهجة',      npIcon:'🎺', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'},
+  {id:'focus',  ar:'تركيز',  en:'Focus',    icon:'🎯', color:'#00E5CC', glow:'rgba(0,229,204,0.3)',    bpm:[70,90],  np:'Deep Focus',        sub:'تركيز عميق',        npIcon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'},
+  {id:'epic',   ar:'ملحمي',  en:'Epic',     icon:'🔥', color:'#FF8C42', glow:'rgba(255,140,66,0.3)',   bpm:[90,120], np:'Epic Orchestral',   sub:'أوركسترا ملحمية',   npIcon:'🎼', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'},
+  {id:'sleep',  ar:'نوم',    en:'Sleep',    icon:'🌙', color:'#5C7AFF', glow:'rgba(92,122,255,0.3)',   bpm:[50,65],  np:'Sleep Music',       sub:'موسيقى نوم هادئة',  npIcon:'🌌', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3'},
+];
+
+let current = 0;
+let isPlaying=false,bpm=72,actx=null,masterGain=null,nodes=[];
+function initAudio(){if(actx)return;actx=new(window.AudioContext||window.webkitAudioContext)();masterGain=actx.createGain();masterGain.gain.value=0;masterGain.connect(actx.destination);}
+function stopAll(){nodes.forEach(n=>{try{n.stop();}catch(e){}});nodes=[];if(window._ml)clearInterval(window._ml);}
+function mkRev(){const s=actx.sampleRate,l=s*2,b=actx.createBuffer(2,l,s);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<l;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/l,2);}const v=actx.createConvolver();v.buffer=b;return v;}
+function pn(f,s,d,v,t){const o=actx.createOscillator(),g=actx.createGain(),r=mkRev();o.type=t||"sine";o.frequency.value=f;g.gain.setValueAtTime(0,actx.currentTime+s);g.gain.linearRampToValueAtTime(v,actx.currentTime+s+0.4);g.gain.linearRampToValueAtTime(0,actx.currentTime+s+d);o.connect(g);g.connect(r);r.connect(masterGain);o.start(actx.currentTime+s);o.stop(actx.currentTime+s+d+0.1);nodes.push(o);}
+const ML={calm:{n:[261,293,329,349,392,349,329,293],b:[130,146],t:2.0,v:0.28,tp:"sine"},sad:{n:[220,246,261,220,207,196,220,196],b:[110,98],t:2.5,v:0.3,tp:"triangle"},stress:{n:[440,466,493,440,415,440,493,466],b:[220,233],t:0.6,v:0.38,tp:"sawtooth"},happy:{n:[392,440,493,523,493,440,392,349],b:[196,174],t:1.2,v:0.28,tp:"triangle"},focus:{n:[329,369,415,369,329,293,329,369],b:[164,146],t:1.6,v:0.22,tp:"sine"},epic:{n:[523,587,659,698,659,587,523,493],b:[261,246],t:1.0,v:0.38,tp:"sawtooth"},sleep:{n:[196,220,246,261,246,220,196,174],b:[98,87],t:3.5,v:0.18,tp:"sine"}};
+function playM(id){if(!actx)return;stopAll();const m=ML[id]||ML.calm;const lp=()=>{m.n.forEach((f,i)=>{pn(f,i*m.t,m.t*1.2,m.v,m.tp);});m.b.forEach((f,i)=>{pn(f,i*m.t*4,m.t*4,m.v*0.5,"sine");});m.n.forEach((f,i)=>{pn(f*1.5,i*m.t+m.t*0.5,m.t*0.7,m.v*0.1,"sine");});};lp();window._ml=setInterval(lp,m.n.length*m.t*1000);}
+function fadeMaster(to){if(!masterGain)return;const from=masterGain.gain.value,step=(to-from)/20;let c=from;const ti=setInterval(()=>{c+=step;masterGain.gain.value=Math.max(0,Math.min(1,c));if((step>0&&c>=to)||(step<0&&c<=to)){masterGain.gain.value=to;clearInterval(ti);}},60);}
+function togglePlay(){initAudio();isPlaying=!isPlaying;const btn=document.getElementById("playBtn");if(isPlaying){btn.textContent="⏸";playM(moods[current].id);fadeMaster(0.75);}else{btn.textContent="▶";fadeMaster(0);setTimeout(stopAll,800);}}
+function setMood(i){current=i;const m=moods[i];document.documentElement.style.setProperty("--mood-color",m.color);document.documentElement.style.setProperty("--mood-glow",m.glow);document.getElementById("heartPath").style.color=m.color;document.getElementById("heartSvg").style.color=m.color;document.getElementById("moodAr").textContent=m.ar;document.getElementById("moodEn").textContent=m.en;document.getElementById("npTrack").textContent=m.np;document.getElementById("npSub").textContent=m.sub;document.getElementById("npIcon").textContent=m.npIcon;const nb=Math.floor(Math.random()*(m.bpm[1]-m.bpm[0])+m.bpm[0]);animBPM(nb);document.getElementById("bpmSlider").value=nb;document.getElementById("bpmSliderLabel").textContent=nb+" نبضة";document.querySelectorAll(".mood-btn").forEach((b,j)=>b.classList.toggle("active",j===i));document.getElementById("heartSvg").style.animationDuration=nb>100?"0.5s":nb<65?"1.5s":"1s";if(isPlaying){fadeMaster(0);setTimeout(()=>{playM(m.id);fadeMaster(0.75);},500);}}
+
+function animBPM(to){
+  const el=document.getElementById('bpmNum');
+  const from=parseInt(el.textContent);
+  const step=(to-from)/20;
+  let cur=from;
+  const t=setInterval(()=>{
+    cur+=step;
+    el.textContent=Math.round(cur);
+    if((step>0&&cur>=to)||(step<0&&cur<=to)){
+      el.textContent=to;clearInterval(t);
+    }
+  },40);
+  bpm=to;
+}
+
+function onBPM(val){
+  bpm=parseInt(val);
+  document.getElementById('bpmSliderLabel').textContent=val+' نبضة';
+  document.getElementById('bpmNum').textContent=val;
+  // Auto detect mood
+  if(val<65) setMoodByBPM('sleep');
+  else if(val<75) setMoodByBPM('calm');
+  else if(val<85) setMoodByBPM('focus');
+  else if(val<100) setMoodByBPM('happy');
+  else if(val<120) setMoodByBPM('epic');
+  else setMoodByBPM('stress');
+}
+
+function setMoodByBPM(id){
+  const i=moods.findIndex(m=>m.id===id);
+  if(i!==current) setMood(i);
+}
+
+function prevMood(){setMood((current-1+moods.length)%moods.length);}
+function nextMood(){setMood((current+1)%moods.length);}
+
+// Init
+setMood(0);
+</script>
+</body>
+</html>
